@@ -1,5 +1,5 @@
 # tc-sonar-verify
-TeamCity下Sonar结果验证，基于Java
+TeamCity下Sonar结果验证，基于Java。 想达到预期是如果代码质量没达到规范，则构建失败。
 
 ## 示例
 TeamCity中使用以下命令集成，若不满足条件，即失败
