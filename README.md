@@ -8,7 +8,7 @@ TeamCity中使用以下命令集成，若不满足条件，即失败
 
 不允许bugs和漏洞，代码覆盖率至少70%
 
-##参数说明
+## 参数说明
 + url: sonar地址 
 + component: 项目标识，通常是  package:id 的形式
 + maxBugs: 允许最大的bugs数
