@@ -58,5 +58,4 @@ public class VerifyImpl {
             return String.format(value + " vulnerabilities greater than " + max);
         }
     }
-
 }

@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) throws UnsupportedEncodingException {
-//        args = new String[]{"url=http://sonar.jiaozifin.com", "component=com.cashme.openrisk:cashme-open-risk", "maxBugs=-1", "minCoverage=70", "maxVulnerabilities=0"};
         List<KeyPair> pairs = parse(args);
         String url = "";
         String component = "";
@@ -28,22 +27,41 @@ public class Main {
                 component = pair.value;
             } else if ("maxBugs".equalsIgnoreCase(pair.key)) {
                 keys.add("bugs");
-                verifies.add(new VerifyImpl.MaxBugs(Integer.parseInt(pair.value)));
+                verifies.add((key, value) -> {
+                    return ("bugs".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
+                            ? String.format("sonar bugs 超过 %s", value) : "";
+                });
             } else if ("minCoverage".equalsIgnoreCase(pair.key)) {
                 keys.add("coverage");
-                verifies.add(new VerifyImpl.MinCoverage(Double.parseDouble(pair.value)));
+                verifies.add((key, value) -> {
+                    return ("coverage".equalsIgnoreCase(key) && Double.parseDouble(value) < Double.parseDouble(pair.value))
+                            ? String.format("sonar 代理覆盖率 %s 小于  %s %%", value, pair.value) : "";
+                });
             } else if ("maxVulnerabilities".equalsIgnoreCase(pair.key)) {
                 keys.add("vulnerabilities");
-                verifies.add(new VerifyImpl.MaxVulnerabilities(Integer.parseInt(pair.value)));
+                verifies.add((key, value) -> {
+                    return ("vulnerabilities".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
+                            ? String.format("sonar  漏洞数%s超过 %s", value, pair.value) : "";
+                });
+            } else if ("maxDuplicatedLinesDensity".equalsIgnoreCase(pair.key)) {//最大代码重柊率
+                keys.add("duplicated_lines_density");
+                verifies.add((key, value) -> {
+                    return ("duplicated_lines_density".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
+                            ? String.format("sonar 重复行%s %% 超过%s %%", value, pair.value) : "";
+                });
             }
         }
         JSONArray measures = request(url, component, keys);
         for (int i = 0; i < measures.size(); i++) {
             JSONObject measure = measures.getJSONObject(i);
             for (Verify verify : verifies) {
-                String verifyResult = verify.verify(measure.getString("metric"), measure.getString("value"));
-                if (verifyResult != null && verifyResult.trim().length() > 0) {
-                    System.out.println(String.format("##teamcity[buildProblem description='%s' identity='sonarVerifyError']", verifyResult));
+                try {
+                    String verifyResult = verify.verify(measure.getString("metric"), measure.getString("value"));
+                    if (verifyResult != null && verifyResult.trim().length() > 0) {
+                        System.out.println(String.format("##teamcity[buildProblem description='%s' identity='sonarVerifyError']", verifyResult));
+                    }
+                } catch (Exception ex) {
+                    System.out.println(String.format("##teamcity[buildProblem description='%s' identity='sonarVerifyError']", ex.getMessage()));
                 }
             }
         }
