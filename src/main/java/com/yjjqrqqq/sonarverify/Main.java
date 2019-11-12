@@ -29,7 +29,7 @@ public class Main {
                 keys.add("bugs");
                 verifies.add((key, value) -> {
                     return ("bugs".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
-                            ? String.format("sonar bugs 超过 %s", value) : "";
+                            ? String.format("sonar bugs %s 超过 %s ", value, pair.value) : "";
                 });
             } else if ("minCoverage".equalsIgnoreCase(pair.key)) {
                 keys.add("coverage");
