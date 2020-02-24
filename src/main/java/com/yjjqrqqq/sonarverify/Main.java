@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) throws UnsupportedEncodingException {
-        List<KeyPair> pairs = parse(args);
+        List<KeyPair> pairs = parse(new String[]{});
         String url = "";
         String component = "";
         List<String> keys = new ArrayList<String>();
@@ -50,6 +50,23 @@ public class Main {
                             ? String.format("sonar 重复行%s %% 超过%s %%", value, pair.value) : "";
                 });
             }
+        }
+        //先检查是否跑完
+        {
+            int cnt = 60;
+            while (true) {
+                String json = HttpUtils.sendGet(url + "/api/ce/component?component=" + component);
+                JSONObject jsonObject = JSON.parseObject(json);
+                if (jsonObject.getJSONArray("queue").size() == 0) {
+                    break;
+                }
+                System.out.println("该构建还有后台任务，等待结束!");
+                if (cnt <= 0) {
+                    break;
+                }
+                cnt--;
+            }
+
         }
         JSONArray measures = request(url, component, keys);
         for (int i = 0; i < measures.size(); i++) {
