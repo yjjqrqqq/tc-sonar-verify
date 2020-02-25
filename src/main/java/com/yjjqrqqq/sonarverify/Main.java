@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) throws UnsupportedEncodingException {
-        List<KeyPair> pairs = parse(new String[]{});
+        List<KeyPair> pairs = parse(args);
         String url = "";
         String component = "";
         List<String> keys = new ArrayList<String>();
