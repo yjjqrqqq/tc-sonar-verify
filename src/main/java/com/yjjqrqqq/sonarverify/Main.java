@@ -64,7 +64,7 @@ public class Main {
                 if (cnt <= 0) {
                     break;
                 }
-                Thread.sleep(200);
+                Thread.sleep(2000);
                 cnt--;
             }
 
