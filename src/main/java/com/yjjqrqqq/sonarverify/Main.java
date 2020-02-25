@@ -14,7 +14,7 @@ import java.util.List;
  * @create 2019/11/9
  */
 public class Main {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws UnsupportedEncodingException, InterruptedException {
         List<KeyPair> pairs = parse(args);
         String url = "";
         String component = "";
@@ -64,6 +64,7 @@ public class Main {
                 if (cnt <= 0) {
                     break;
                 }
+                Thread.sleep(200);
                 cnt--;
             }
 
