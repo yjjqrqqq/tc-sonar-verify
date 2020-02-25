@@ -29,25 +29,25 @@ public class Main {
                 keys.add("bugs");
                 verifies.add((key, value) -> {
                     return ("bugs".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
-                            ? String.format("sonar bugs %s 超过 %s ", value, pair.value) : "";
+                            ? String.format("sonar bugs %s greater than %s ", value, pair.value) : "";
                 });
             } else if ("minCoverage".equalsIgnoreCase(pair.key)) {
                 keys.add("coverage");
                 verifies.add((key, value) -> {
                     return ("coverage".equalsIgnoreCase(key) && Double.parseDouble(value) < Double.parseDouble(pair.value))
-                            ? String.format("sonar 代理覆盖率 %s 小于  %s %%", value, pair.value) : "";
+                            ? String.format("sonar code coverage %s less than  %s %%", value, pair.value) : "";
                 });
             } else if ("maxVulnerabilities".equalsIgnoreCase(pair.key)) {
                 keys.add("vulnerabilities");
                 verifies.add((key, value) -> {
                     return ("vulnerabilities".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
-                            ? String.format("sonar  漏洞数%s超过 %s", value, pair.value) : "";
+                            ? String.format("sonar  vulnerabilities (%s) greater than  %s", value, pair.value) : "";
                 });
             } else if ("maxDuplicatedLinesDensity".equalsIgnoreCase(pair.key)) {//最大代码重柊率
                 keys.add("duplicated_lines_density");
                 verifies.add((key, value) -> {
                     return ("duplicated_lines_density".equalsIgnoreCase(key) && Double.parseDouble(value) > Double.parseDouble(pair.value))
-                            ? String.format("sonar 重复行%s %% 超过%s %%", value, pair.value) : "";
+                            ? String.format("sonar duplicated_lines_density %s %% greater than %s %%", value, pair.value) : "";
                 });
             }
         }
@@ -60,7 +60,7 @@ public class Main {
                 if (jsonObject.getJSONArray("queue").size() == 0) {
                     break;
                 }
-                System.out.println("该构建还有后台任务，等待结束!");
+                System.out.println("Sonar has background task,wait finish!");
                 if (cnt <= 0) {
                     break;
                 }
